@@ -38,6 +38,7 @@ $ npm install node-enocean-utils
 	* [`EnoceanUtils` object](#EnoceanUtils-object)
 	* [`Device` object](#Device-object)
 	* [`Telegram` object](#Telegram-object)
+	* [`Message` object](#Message-object)
 	* [`Value` object](#Value-object)
 * [Supported EEPs](#Supported-EEPs)
 * [Command Line Tools](#Command-Line-Tools)
@@ -260,9 +261,20 @@ Property      | Type   | Required | Description
 
 The `Telegram` object represents an EnOcean telegram. This object is just a hash object.
 
-Whenever an EnOcean telegram is received, an `Telegram` object will be passed to the callback function for the relevant event as the 1st argument.
+Whenever an EnOcean telegram is received, an `Telegram` object will be passed to the callback function for the relevant event as the 1st argument. The structure of the `Telegram` object is as follows:
 
-Though there are a lot of values in this object, you don't need to use all values. It is enough to know the `message` property in this object. You can obtain most of the necessary values through The `message` property. The `message` property in this object returns a hash object having the properties as follows:
+Property          | Type    | Description
+------------------|---------|------------
+`message`         | [`Message`](#Message-object) | See the section "[`Message` object](#Message-object)"
+`buffer`          | Buffer  | This Buffer object represents a whole extent of the telegram.
+`hex`             | Array   | This array represents a whole extent of the telegram. Each element in the array is an hexadecimal representation of each byte.
+`structure`       | Array   | This array is used for [`analizer.js`](#analizer-js). You probably don't need this array. If you are interested in this array, you can see the structure using `console.dir()`.
+
+Though there are a lot of values in this object, you don't need to use all values. It is enough to know only the `message` property in this object. You can get a [`Message`](#Message-object) object through the `message` property. See the section "[`Message` object](#Message-object)" for details.
+
+### <a name="Message-object"> `Message` object</a>
+
+You can obtain most of the necessary values through The `message` property in the [`Telegram`](#Telegram-object) object. The `message` property in this object returns a hash object having the properties as follows:
 
 Property          | Type    | Description
 ------------------|---------|------------
