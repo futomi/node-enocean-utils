@@ -533,7 +533,7 @@ Finally, if you could not get the EEP by yourself, ask the seller which the devi
 
 This module supports some EEPs, there are a lot of EEPs this module does not support. If you need to use an EEP which this module does not support, you can develop a custom parser by yourself.
 
-At first, set an callback function for the [`data-unknown`] event. You can catch all telegrams whose EEPs are not supported by this module.
+At first, set an callback function for the [`data-unknown`](#data-unknown-event) event. You can catch all telegrams whose EEPs are not supported by this module.
 
 You can obtain a Buffer object representing the Data of Data Link Layer (Data_DL) specified in the EnOcean Radio Protocol 2 (ERP2) Specification P16. Once you get the Data_DL, you can parse it based on the EnOcean Equipment Profiles (EEP) Specification Version 2.6.5.
 
