@@ -468,10 +468,12 @@ This script analyzes all incoming telegrams and shows you the results as formatt
 ]
 ```
 
-If you run this script, this script listens to incoming telegrams. Whenever an telegram comes, this script shows the result of analyzing the telegram as follows:
+If you run this script, this script listens to incoming telegrams. Whenever an telegram comes, this script shows the result. This script takes two arguments. The 1st argument is the path of the serial port. The 1st argument is required. The 2nd argument is the baud rate of the serial port. The 2nd argument is optional. If you don't specify the 2nd argument, the baud rate is 56700.
+
+This script shows the result as follows:
 
 ```
-D:\GitHub\node-enocean-utils\tools>node analyzer.js
+D:\GitHub\node-enocean-utils\tools>node analyzer.js COM7
 ===============================================================================
 [Summary]
 - HEX                          |55 00 0A 02 0A 9B 22 04 01 31 95 00 00 48 08..
@@ -514,10 +516,14 @@ D:\GitHub\node-enocean-utils\tools>node analyzer.js
 
 ### <a name="learn-js"> learn.js</a>
 
-This script analyzes incoming Teach-In telegrams and shows you the results as follows:
+This script analyzes incoming Teach-In telegrams and shows you the results. If you run this script, this script listens to incoming Teach-In telegrams. Whenever an Teach-In telegram comes, this script shows the result.
+
+This script takes two arguments. The 1st argument is the path of the serial port. The 1st argument is required. The 2nd argument is the baud rate of the serial port. The 2nd argument is optional. If you don't specify the 2nd argument, the baud rate is 56700.
+
+This script shows the result as follows:
 
 ```
-D:\GitHub\node-enocean-utils\tools>node learn.js
+D:\GitHub\node-enocean-utils\tools>node learn.js COM7
 Module ID   |EEP     |Manufacturer
 ------------|--------|--------------------
 000004012BB4|A5-07-81|SIMICX_CO_LTD
@@ -554,7 +560,7 @@ In order to obtain the Buffer object representing the  Data_DL, access to the `d
 Note that you have to know the EEP of the targeted device in advance to parse the Data_DL.
 
 ```JavaScript
-var enocean = require('../lib/node-enocean-utils.js');
+var enocean = require('node-enocean-utils');
 enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 
 enocean.on('data-unknown', (telegram) => {

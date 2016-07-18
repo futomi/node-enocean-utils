@@ -12,10 +12,28 @@
 * ---------------------------------------------------------------- */
 'use strict';
 process.chdir(__dirname);
-
 var enocean = require('../lib/node-enocean-utils.js');
 
-enocean.startMonitor({'path': 'COM7', 'rate': 57600}, (err) => {
+// Get command line arguments 
+var serial_path = process.argv[2];
+var serial_rate = process.argv[3];
+
+if(!serial_path) {
+	console.log('[ERROR] Specifiy the path of the serial port as the 1st argument.');
+	process.exit();
+}
+if(serial_rate) {
+	if(serial_rate.match(/[^\d]/)) {
+		console.log('[ERROR] The baud rate must be a number.')
+		process.exit();
+	} else {
+		serial_rate = parseInt(serial_rate, 10);
+	}
+} else {
+	serial_rate = 56700;
+}
+
+enocean.startMonitor({'path': serial_path, 'rate': serial_rate}, (err) => {
 	if(err) {
 		console.log('ERROR: ' + err.toString(err));
 	}
