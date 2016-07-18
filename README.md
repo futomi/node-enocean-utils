@@ -80,7 +80,7 @@ Then the [`startMonitor()`](#startMonitor-method) method is called to start moni
 
 The `path` property means the path of the USB gateway. If you use Windows OS, it should be like `COM3`. If you use Linux, it should be like `/dev/tty-usbserial1`. You can also specify the `rate` property which means the baud rate. The default value of the `rate` property is 56700. If your USB gateway supports the default baud rate, you don't need to specify the property.
 
-Finally, an event listener for the [`data-known`](#data-known-event) event is set in this case. The [`data-known`](#data-known-event) event will fired only if the received telegram came from the devices which you registered using the [`teach()`](#taach-method) method and the registered EEP for the device was supported by this Node.js module `node-enocean-utils`. You can see the supported EEPs in the section "[Supported EEPs](#Supported-EEPs)" below.
+Finally, an event listener for the [`data-known`](#data-known-event) event is set in this case. The [`data-known`](#data-known-event) event will fired only if the received telegram came from the devices which you registered using the [`teach()`](#teach-method) method and the registered EEP for the device was supported by this Node.js module `node-enocean-utils`. You can see the supported EEPs in the section "[Supported EEPs](#Supported-EEPs)" below.
 
 When the [`data-known`](#data-known-event) event is fired, a [`Telegram`](#Telegram-object) object will be passed to the callback function. The [`Telegram`](#Telegram-object) object contains many values parsed from the incoming telegram. The sample code above shows the device name and the report data detected by the device.
 
@@ -117,7 +117,7 @@ enocean.teach({
 
 ### <a name="getDeviceInfo-method"> getDeviceInfo(*id*)</a>
 
-This method returns a [`Device`](#Device) object identified by the specified `id` among the registered devices using the [`teach()`](teach-method) method.
+This method returns a [`Device`](#Device-object) object identified by the specified `id` among the registered devices using the [`teach()`](#teach-method) method.
 
 The value of `id` must be a module ID of an EnOcean device. It must be hexadecimal representation such as `00 00 00 2C 86 5C`. `0000002C865C` and `00-00-00-2C-86-5C` are also acceptable. The value is not case-sensitive.
 
@@ -224,7 +224,7 @@ The `data-known` event will be fired only if the received telegram came from the
 
 The `data-unknown` event will be fired only if the received telegram was not able to be parsed (The module ID of the originator device was not registered or the EEP was not supported by this module).
 
-### <a name="data-learn"> `data-learn` event</a>
+### <a name="data-learn-event"> `data-learn` event</a>
 
 The `data-learn` event will be fired when the received telegram was a Teach-In telegram.
 
@@ -332,7 +332,7 @@ The result of the code above will be as follows:
 
 ### <a name="Value-object"> `Value` object</a>
 
-You can obtain the EEP-specific report from the `Value` object which you can access through the `value` property in the [`Telegram`]("#Telegram-object"). The sample code below shows how to obtain and utilize the `Value` object.
+You can obtain the EEP-specific report from the `Value` object which you can access through the `value` property in the [`Telegram`](#Telegram-object). The sample code below shows how to obtain and utilize the `Value` object.
 
 ```JavaScript
 var enocean = require('node-enocean-utils');
@@ -520,11 +520,11 @@ In order to know the module ID and the EEP, read the user manual of the device y
 
 The devices sending telegrams grouped in 4BS (e.g. temperature sensors) or 1BS (e.g. door sensors) are probably equipped with a small button. If you press the button, the device will send a Teach-In telegrams. If you can catch the telegram, you can get the module ID and the EEP.
 
-For catching Teach-In telegrams, the [`learn.js`](#learn.js) described in the previous section is useful.
+For catching Teach-In telegrams, the [`learn.js`](#learn-js) described in the previous section is useful.
 
 If the device is grouped in 1BS (e.g. door sensors), it will inform only the module ID. To make matters worse, if your device is grouped in RPS (e.g. locker switches), it does not have the Teach-In mechanism.
 
-Anyway, you can get at least the module ID even if the device is grouped in RPS. Run the [`analizer.js`](#analyzer.js) and press a button on the locker switch. Then you will catch a RPS telegram and see the result. In the result, you can see the module ID in the line for the Device ID.
+Anyway, you can get at least the module ID even if the device is grouped in RPS. Run the [`analizer.js`](#analyzer-js) and press a button on the locker switch. Then you will catch a RPS telegram and see the result. In the result, you can see the module ID in the line for the Device ID.
 
 Finally, if you could not get the EEP by yourself, ask the seller which the device sold to you. That's the last resort.
 
