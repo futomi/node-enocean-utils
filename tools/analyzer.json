@@ -28,5 +28,17 @@
 		"id"  : "00 00 04 01 31 95",
 		"eep" : "A5-02-05",
 		"name": "STM 431J Temperature Sensor"
+	},
+	{
+		"id"  : "00 00 04 01 81 4D",
+		"eep" : "A5-09-04",
+		"name": "Pressac CO2, Temperature and Humidity Sensor"
+	},
+	{
+		"id"  : "00 00 04 00 58 FD",
+		"eep" : "A5-04-01",
+		"name": "Pressac Mini Temperature & Humidity"
 	}
+
+	
 ]

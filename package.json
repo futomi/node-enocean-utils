@@ -1,6 +1,6 @@
 {
   "name": "node-enocean-utils",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "The node-enocean-utils is a Node.js module which allows you to get and analyze EnOcean telegrams came from EnOcean devices via a USB gateway such as USB 400.",
   "main": "./lib/node-enocean-utils.js",
   "files": [

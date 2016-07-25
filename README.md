@@ -400,6 +400,18 @@ Property      | Type   | Description
 --------------|--------|------------
 `temperature` | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃).
 
+### A5-04-01
+
+* RORG : 4BS Telegram (A5)
+* FUNC : Temperature and Humidity Sensor (04)
+* TYPE : Range 0°C to +40°C and 0% to 100% (01)
+
+Property       | Type   | Description
+---------------|--------|------------
+`humidity`     | Number | This value is the humidity measured by the originated sensor. The unit is percent (%).
+`temperature`  | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃). If the originated sensor does not have temperature sensor availability, this value is null.
+
+
 ### A5-07-01
 
 * RORG : 4BS Telegram (A5)
@@ -410,6 +422,18 @@ Property      | Type   | Description
 --------------|--------|------------
 `pirs`        | Number | This value represents the PIR status. If the occupancy sensor detect any motion, this value will be 1, otherwise 0.
 `svc`         | Number | This value represents the supply voltage. This value is a floating number between 0 and 5. The unit is V.
+
+### A5-09-04
+
+* RORG : 4BS Telegram (A5)
+* FUNC : Gas Sensor (09)
+* TYPE : CO2 Sensor (04)
+
+Property       | Type   | Description
+---------------|--------|------------
+`humidity`     | Number | This value is the humidity measured by the originated sensor. The unit is percent (%). If the originated sensor does not have humidity sensor availability, this value is null.
+`concentration`| Number | This value is the CO2 concentration measured by the originated sensor. The unit is ppm.
+`temperature`  | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃). If the originated sensor does not have temperature sensor availability, this value is null.
 
 ### D5-00-01
 
