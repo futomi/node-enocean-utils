@@ -46,10 +46,11 @@ $ npm install node-enocean-utils
 	* [learn.js](#learn-js)
 * [How to know the module ID and the EEP](#How-to-know)
 * [How to create your custom EEP parser](#How-to-create)
+* [Release Note](#Release-Note)
 * [License](#License)
 
 ---------------------------------------
-## <a name="Quick-Start"> Quick Start</a>
+## <a id="Quick-Start">Quick Start</a>
 
 ```JavaScript
 var enocean = require('node-enocean-utils');
@@ -101,9 +102,9 @@ In order to analyze the EEP-specific reports in telegrams incoming from EnOcean 
 Using the "Teach-In" mechanism of EnOcean, you could get the module ID and the EEP by yourself. See the section "[How to know the module ID and the EEP](#How-to-know)" for details. At least you can surely obtain the module ID by yourself. But you can not necessarily obtain the EEP of all devices. If you don't know the EEP of your own device, check the user manual of the device or ask the seller which sold it to you.
 
 ---------------------------------------
-## <a name="Methods"> Methods</a>
+## <a id="Methods">Methods</a>
 
-### <a name="teach-method"> teach(*device*)</a>
+### <a id="teach-method">teach(*device*)</a>
 
 This method resisters a device. The [Device](#Device-object) object must be passed as the 1st argument. See the section "[Device object](#Device-object)" in details for the [`Device`](#Device-object) object.
 
@@ -116,7 +117,7 @@ enocean.teach({
 });
 ```
 
-### <a name="getDeviceInfo-method"> getDeviceInfo(*id*)</a>
+### <a id="getDeviceInfo-method">getDeviceInfo(*id*)</a>
 
 This method returns a [`Device`](#Device-object) object identified by the specified `id` among the registered devices using the [`teach()`](#teach-method) method.
 
@@ -148,7 +149,7 @@ STM250J Door Sensor
 Note that the module ID in the result is slightly different from the `id` passed to [`teach()`](#teach-method) method. All module ID are normalized to the same format internally.
 
 
-### <a name="getLearnedDevices-method"> getLearnedDevices()</a>
+### <a id="getLearnedDevices-method">getLearnedDevices()</a>
 
 This method returns all of the registered devices as an hash object. The key of the hash object is a normalized module ID of a device.
 
@@ -187,7 +188,7 @@ The result of the sample code above will be as follows:
 000004013195 | A5-02-05 | STM 431J Temperature Sensor
 ```
 
-### <a name="startMonitor-method"> startMonitor(*params*, *callback*)</a>
+### <a id="startMonitor-method">startMonitor(*params*, *callback*)</a>
 
 This method starts monitoring incoming telegrams.
 
@@ -202,37 +203,37 @@ When this method completes to start monitoring, the specified `callback` functio
 
  The `callback` argument is optional. If the `callback` is not passed to this method, this method will do nothing when this method completes to start monitoring.
 
-### <a name="stopMonitor-method"> stopMonitor(*callback*)</a>
+### <a id="stopMonitor-method">stopMonitor(*callback*)</a>
 
 This method stops monitoring incoming telegrams. When this method completes to stop monitoring, the specified `callback` function will be called. No argument will be passed the `callback` function.
 
 The `callback` argument is optional. If the `callback` is not passed to this method, this method will do nothing when this method completes to stop monitoring.
 
 ---------------------------------------
-## <a name="Events"> Events</a>
+## <a id="Events">Events</a>
 
 Whenever an EnOcean telegram was received, an event will be fired on the [`EnoceanUtils`](#EnoceanUtils-object) object.
 
-### <a name="data-event"> `data` event</a>
+### <a id="data-event">`data` event</a>
 
 The `data` event will be fired whenever any telegram was received event even if the telegram was not able to be parsed (The EEP was not supported by this module) or the telegram was a Teach-In telegram.
 
-### <a name="data-known-event"> `data-known` event</a>
+### <a id="data-known-event">`data-known` event</a>
 
 The `data-known` event will be fired only if the received telegram came from the devices which you registered using the `teach()` method and the registered EEP for the device was supported by this module.
 
-### <a name="data-unknown-event"> `data-unknown` event</a>
+### <a id="data-unknown-event">`data-unknown` event</a>
 
 The `data-unknown` event will be fired only if the received telegram was not able to be parsed (The module ID of the originator device was not registered or the EEP was not supported by this module).
 
-### <a name="data-learn-event"> `data-learn` event</a>
+### <a id="data-learn-event">`data-learn` event</a>
 
 The `data-learn` event will be fired when the received telegram was a Teach-In telegram.
 
 ---------------------------------------
-## <a name="Objects"> Objects</a>
+## <a id="Objects">Objects</a>
 
-### <a name="EnoceanUtils-object"> `EnoceanUtils` object</a>
+### <a id="EnoceanUtils-object">`EnoceanUtils` object</a>
 
 The `EnoceanUtils` object can be obtain by the code below as you can see the previous sections many times.
 
@@ -242,7 +243,7 @@ var enocean = require('node-enocean-utils');
 
 As you know, this document explain how to use the `EnoceanUtils` object.
 
-### <a name="Device-object"> `Device` object</a>
+### <a id="Device-object">`Device` object</a>
 
 The `Device` object represents an EnOcean device. This object is just a hash object.
 
@@ -257,7 +258,7 @@ Property      | Type   | Required | Description
 `name`        | String | optional | The name of the device which you can identify the device. The value is not used for any process in this module. You can set any name. The length of the value must be equal to or less than 50.
 `manufacturer`| String | optional | The manufacturer name of the device. The value is not used for any process. You can set any name. The length of the value must be equal to or less than 50.
 
-### <a name="Telegram-object"> `Telegram` object</a>
+### <a id="Telegram-object">`Telegram` object</a>
 
 The `Telegram` object represents an EnOcean telegram. This object is just a hash object.
 
@@ -272,7 +273,7 @@ Property          | Type    | Description
 
 Though there are a lot of values in this object, you don't need to use all values. It is enough to know only the `message` property in this object. You can get a [`Message`](#Message-object) object through the `message` property. See the section "[`Message` object](#Message-object)" for details.
 
-### <a name="Message-object"> `Message` object</a>
+### <a id="Message-object">`Message` object</a>
 
 You can obtain most of the necessary values through The `message` property in the [`Telegram`](#Telegram-object) object. The `message` property in this object returns a hash object having the properties as follows:
 
@@ -342,7 +343,7 @@ The result of the code above will be as follows:
   dbm_desc: '-41 dBm' }
 ```
 
-### <a name="Value-object"> `Value` object</a>
+### <a id="Value-object">`Value` object</a>
 
 You can obtain the EEP-specific report from the `Value` object which you can access through the `value` property in the [`Telegram`](#Telegram-object). The sample code below shows how to obtain and utilize the `Value` object.
 
@@ -386,7 +387,7 @@ enocean.on('data-known', (telegram) => {
 The two type of devices are registered, a door sensor and a rocker switch. In the callback function for the `data-known` event, the EEP is determined from `Telegram.message.eep` property. As you can see, the properties supported by the `Value` object are different depending on the EEP. See the section "[Supported EEPs](#Supported-EEPs)" for details.
 
 ---------------------------------------
-## <a name="Supported-EEPs"> Supported EEPs</a>
+## <a id="Supported-EEPs">Supported EEPs</a>
 
 This module supports the EEPs as follows. This section describes the structure of the `Value` object for each EEP as well.
 
@@ -469,11 +470,11 @@ Property  | Type   | Description
 
 
 ---------------------------------------
-## <a name="Command-Line-Tools"> Command Line Tools</a>
+## <a id="Command-Line-Tools">Command Line Tools</a>
 
 This module includes some useful command line scripts in `tools` folder.
 
-### <a name="analyzer-js"> analyzer.js</a>
+### <a id="analyzer-js">analyzer.js</a>
 
 This script analyzes all incoming telegrams and shows you the results as formatted texts. If you want to analyze EEP-specific telegrams, set the device information as an array to the `analyzer.json` located in the same folder. The JSON blow is an example of `analyzer.json`:
 
@@ -538,7 +539,7 @@ D:\GitHub\node-enocean-utils\tools>node analyzer.js COM7
 - CRC8D                        |CA         |valid
 ```
 
-### <a name="learn-js"> learn.js</a>
+### <a id="learn-js">learn.js</a>
 
 This script analyzes incoming Teach-In telegrams and shows you the results. If you run this script, this script listens to incoming Teach-In telegrams. Whenever an Teach-In telegram comes, this script shows the result.
 
@@ -556,7 +557,7 @@ Module ID   |EEP     |Manufacturer
 ```
 
 ---------------------------------------
-## <a name="How-to-know"> How to know the module ID and the EEP</a>
+## <a id="How-to-know">How to know the module ID and the EEP</a>
 
 In order to know the module ID and the EEP, read the user manual of the device you own at first if it is available. If it does not describe such information, you can investigate the information by yourself depending on the type of the device.
 
@@ -571,7 +572,7 @@ Anyway, you can get at least the module ID even if the device is grouped in RPS.
 Finally, if you could not get the EEP by yourself, ask the seller which the device sold to you. That's the last resort.
 
 ---------------------------------------
-## <a name="How-to-create"> How to create your custom EEP parser</a>
+## <a id="How-to-create">How to create your custom EEP parser</a>
 
 This module supports some EEPs, there are a lot of EEPs this module does not support. If you need to use an EEP which this module does not support, you can develop a custom parser by yourself.
 
@@ -624,26 +625,33 @@ enocean.on('data-unknown', (telegram) => {
 ```
 
 ---------------------------------------
-## <a name="License"> License</a>
+## <a id="Release-Note">Release Note</a>
+
+* v0.0.6 (2017-08-02)
+  * Fixed a bug that an exeption was thrown if an unexpected telegram comes.  
+
+
+---------------------------------------
+## <a id="License">License</a>
 
 The MIT License (MIT)
 
-Copyright 2016 Futomi Hatano
+Copyright (c) 2016 - 2017 Futomi Hatano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to
-deal in the Software without restriction, including without limitation the
-rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-sell copies of the Software, and to permit persons to whom the Software is
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-IN THE SOFTWARE.
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

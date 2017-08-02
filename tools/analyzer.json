@@ -38,7 +38,40 @@
 		"id"  : "00 00 04 00 58 FD",
 		"eep" : "A5-04-01",
 		"name": "Pressac Mini Temperature & Humidity"
+	},
+	{
+		"id"  : "00 00 00 2E 58 FA",
+		"eep" : "F6-02-04",
+		"name": "EASYFIT EWSDJ Rocker Switch Double"
+	},
+	{
+		"id"  : "00 00 00 2E 58 AF",
+		"eep" : "F6-02-04",
+		"name": "EASYFIT EWSSJ Rocker Switch Single"
+	},
+	{
+		"id"  : "00 00 04 01 11 6C",
+		"eep" : "A5-02-05",
+		"name": "ETM501J Beacon"
+	},
+	{
+		"id"  : "00 00 05 00 21 3C",
+		"eep" : "D5-00-01",
+		"name": "ETM502J Vibration sensor"
+	},
+	{
+		"id"  : "00 00 00 2C BD 6F",
+		"eep" : "F6-02-04",
+		"name": "OPTEX CSW-S1-J Wall Switch"
+	},
+	{
+		"id"  : "00 00 00 2E 22 8B",
+		"eep" : "F6-02-04",
+		"name": "OPTEX CSW-S2-J Wall Switch"
+	},
+	{
+		"id"  : "00 00 04 00 F0 67",
+		"eep" : "A5-07-01",
+		"name": "OPTEX CPI-J Occupancy Sensor"
 	}
-
-	
 ]

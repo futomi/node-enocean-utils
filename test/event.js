@@ -31,6 +31,22 @@ var known_device_list = [
 		'id'  : '00 00 04 01 31 95',
 		'eep' : 'A5-02-05',
 		'name': 'STM 431J Temperature Sensor'
+	},
+
+	{
+		'id'  : '00 00 00 2C BD 6F',
+		'eep' : 'F6-02-04',
+		'name': 'OPTEX CSW-S1-J Wall Switch'
+	},
+	{
+		'id'  : '00 00 00 2E 22 8B',
+		'eep' : 'F6-02-04',
+		'name': 'OPTEX CSW-S2-J Wall Switch'
+	},
+	{
+		'id'  : '00 00 04 00 F0 67',
+		'eep' : 'A5-07-01',
+		'name': 'OPTEX CPI-J Occupancy Sensor'
 	}
 ];
 
