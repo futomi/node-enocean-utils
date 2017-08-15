@@ -1,7 +1,7 @@
 'use strict';
 process.chdir(__dirname);
 
-var enocean = require('../lib/node-enocean-utils.js');
+const enocean = require('../lib/node-enocean-utils.js');
 
 enocean.teach({
 	'id'  : '00 00 04 00 8F E0',
@@ -31,8 +31,8 @@ enocean.teach({
 enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 
 enocean.on('data-known', (telegram) => {
-	var value = telegram['message']['value']; // Value object
-	var eep = telegram['message']['eep'];
+	let value = telegram['message']['value']; // Value object
+	let eep = telegram['message']['eep'];
 	if(eep === 'D5-00-01') {
 		// STM250J Door Sensor
 		console.log('[' + eep + '] STM250J Door Sensor');

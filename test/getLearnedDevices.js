@@ -1,7 +1,7 @@
 'use strict';
 process.chdir(__dirname);
 
-var enocean = require('../lib/node-enocean-utils');
+const enocean = require('../lib/node-enocean-utils');
 
 enocean.teach({
 	'id'  : '00 00 04 00 8F E0',
@@ -19,9 +19,9 @@ enocean.teach({
 	'name': 'STM 431J Temperature Sensor'
 });
 
-var devices = enocean.getLearnedDevices();
-for(var id in devices) {
-	var device = devices[id];
-	var cols = [device['id'], device['eep'], device['name']];
+let devices = enocean.getLearnedDevices();
+for(let id in devices) {
+	let device = devices[id];
+	let cols = [device['id'], device['eep'], device['name']];
 	console.log(cols.join(' | '));
 }

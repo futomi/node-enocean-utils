@@ -1,7 +1,7 @@
 {
   "name": "node-enocean-utils",
-  "version": "0.0.6",
-  "description": "The node-enocean-utils is a Node.js module which allows you to get and analyze EnOcean telegrams came from EnOcean devices via a USB gateway such as USB 400.",
+  "version": "0.1.0",
+  "description": "The node-enocean-utils is a Node.js module which allows you to get and analyze EnOcean telegrams came from EnOcean devices via a USB gateway such as USB 300/300U/400J.",
   "main": "./lib/node-enocean-utils.js",
   "files": [
     "lib"
@@ -24,6 +24,6 @@
   },
   "readmeFilename": "README.md",
   "dependencies": {
-    "serialport": ">=4.0.1"
+    "serialport": ">=5.0.0"
   }
 }

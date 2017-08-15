@@ -1,34 +1,42 @@
 node-enocean-utils
 ===============
 
-The node-enocean-utils is a Node.js module which allows you to get and analyze telegrams came from EnOcean devices via a USB gateway such as USB 400.
+The node-enocean-utils is a Node.js module which allows you to get and analyze telegrams came from EnOcean devices via a USB gateway such as USB [300](https://www.enocean.com/en/enocean_modules/usb-300-oem/)/[300U](https://www.enocean.com/en/enocean_modules_902mhz/usb-300u-oem/)/[400J](https://www.enocean.com/en/enocean_modules_928mhz/usb-400j/).
 
 This module is based on the EnOcean specification as follows:
 
-- EnOcean Serial Protocol 3
-- EnOcean Radio Protocol 2
-- EnOcean Equipment Profiles 2.6.5
+- EnOcean Serial Protocol 3 (ESP3)
+- EnOcean Radio Protocol 2 (ERP2)
+- EnOcean Radio Protocol 1  (ERP1)
+- EnOcean Equipment Profiles (EEP) 2.6.5
 
-See the [EnOcean web site](https://www.enocean.com/) for details.
+See the [EnOcean web site](https://www.enocean.com/en/knowledge-base/) for details.
 
 ## Dependencies
+
 - [Node.js](https://nodejs.org/en/) 4.4 +
-- [serialport](https://www.npmjs.com/package/serialport)
+  - Though the node-enocean-utils works on Node 4 for now, it is strongly recommended to use Node 6 or newer. The node-enocean-utils will not support Node 4 in the future.
+- [serialport](https://www.npmjs.com/package/serialport) 5.0.0 +
+  - If the serialport module has been already installed in you host computer, check the version. The node-enocean-utils now does not support older versions than 5.0.0 of the serialport module.
 
 ## Installation
+
 ```
+$ cd ~
+$ npm install serialport
 $ npm install node-enocean-utils
 ```
+
 ---------------------------------------
 ## Table of Contents
 
 * [Quick Start](#Quick-Start)
 * [Methods](#Methods)
-	* [`teach(params)`](#teach-method)
-	* [`getDeviceInfo(id)`](#getDeviceInfo-method)
+	* [`teach()`](#teach-method)
+	* [`getDeviceInfo()`](#getDeviceInfo-method)
 	* [`getLearnedDevices()`](#getLearnedDevices-method)
-	* [`startMonitor(params, callback)`](#startMonitor-method)
-	* [`stopMonitor(callback)`](#stopMonitor-method)
+	* [`startMonitor()`](#startMonitor-method)
+	* [`stopMonitor()`](#stopMonitor-method)
 * [Events](#Events)
 	* [`data` event](#data-event)
 	* [`data-known` event](#data-known-event)
@@ -36,6 +44,7 @@ $ npm install node-enocean-utils
 	* [`data-learn` event](#data-learn-event)
 * [Objects](#Objects)
 	* [`EnoceanUtils` object](#EnoceanUtils-object)
+	* [`Gateway` object](#Gateway-object)
 	* [`Device` object](#Device-object)
 	* [`Telegram` object](#Telegram-object)
 	* [`Message` object](#Message-object)
@@ -53,36 +62,37 @@ $ npm install node-enocean-utils
 ## <a id="Quick-Start">Quick Start</a>
 
 ```JavaScript
-var enocean = require('node-enocean-utils');
+const enocean = require('node-enocean-utils');
 
 // Teach the information of Enocean devices
 enocean.teach({
-	'id'  : '00 00 00 2C 86 5C',
-	'eep' : 'F6-02-04',
-	'name': 'ESM210R Rocker Switch Single'
+  'id'  : '00 00 00 2C 86 5C',
+  'eep' : 'F6-02-04',
+  'name': 'ESM210R Rocker Switch Single'
 });
 enocean.teach({
-	'id'  : '00 00 04 01 31 95',
-	'eep' : 'A5-02-05',
-	'name': 'STM 431J Temperature Sensor'
+  'id'  : '00 00 04 01 31 95',
+  'eep' : 'A5-02-05',
+  'name': 'STM 431J Temperature Sensor'
 });
 
 // Start to monitor telegrams incoming from the Enocean devices
-enocean.startMonitor({'path': 'COM7', 'rate': 57600});
-
-// Set an event listener for 'data-known' events
-enocean.on('data-known', (telegram) => {
-	var message = telegram['message'];
-	console.log(message['device']['name'] + ': ' + message['desc']);
+enocean.startMonitor().then(() => {
+  // Set an event listener for 'data-known' events
+  enocean.on('data-known', (telegram) => {
+    let message = telegram['message'];
+    console.log(message['device']['name'] + ': ' + message['desc']);
+  });
+}).catch((error) => {
+  console.error(error);
 });
 ```
+
 At first, the information of a Rocker switch and a Temperature sensor is set using [`teach()`](#teach-method) method. In this case, the information of a device consists of 3 properties. The `id` property is a module ID of the targeted device. The `eep` property is an EEP (EnOcean Equipment Profile) which the targeted device supports. The `name` property is a name of the targeted device.
 
-Then the [`startMonitor()`](#startMonitor-method) method is called to start monitoring telegrams incoming from the targeted devices. The [`startMonitor()`](#startMonitor-method) method takes an argument. It must be an object having at least `path` property.
+Then the [`startMonitor()`](#startMonitor-method) method is called to start monitoring telegrams incoming from the targeted devices. The [`startMonitor()`](#startMonitor-method) method returns a `Promise` object.
 
-The `path` property means the path of the USB gateway. If you use Windows OS, it should be like `COM3`. If you use Linux, it should be like `/dev/tty-usbserial1`. You can also specify the `rate` property which means the baud rate. The default value of the `rate` property is 56700. If your USB gateway supports the default baud rate, you don't need to specify the property.
-
-Finally, an event listener for the [`data-known`](#data-known-event) event is set in this case. The [`data-known`](#data-known-event) event will fired only if the received telegram came from the devices which you registered using the [`teach()`](#teach-method) method and the registered EEP for the device was supported by this Node.js module `node-enocean-utils`. You can see the supported EEPs in the section "[Supported EEPs](#Supported-EEPs)" below.
+Finally, an event listener for the [`data-known`](#data-known-event) event is set in this case. The [`data-known`](#data-known-event) event will be fired only if the received telegram came from the devices which you registered using the [`teach()`](#teach-method) method and the registered EEP for the device was supported by this Node.js module `node-enocean-utils`. You can see the supported EEPs in the section "[Supported EEPs](#Supported-EEPs)" below.
 
 When the [`data-known`](#data-known-event) event is fired, a [`Telegram`](#Telegram-object) object will be passed to the callback function. The [`Telegram`](#Telegram-object) object contains many values parsed from the incoming telegram. The sample code above shows the device name and the report data detected by the device.
 
@@ -109,11 +119,11 @@ Using the "Teach-In" mechanism of EnOcean, you could get the module ID and the E
 This method resisters a device. The [Device](#Device-object) object must be passed as the 1st argument. See the section "[Device object](#Device-object)" in details for the [`Device`](#Device-object) object.
 
 ```JavaScript
-var enocean = require('node-enocean-utils');
+const enocean = require('node-enocean-utils');
 enocean.teach({
-	'id'  : '00 00 04 01 2B B4',
-	'eep' : 'A5-07-01',
-	'name': 'HM92-01WHC motion detector'
+  'id'  : '00 00 04 01 2B B4',
+  'eep' : 'A5-07-01',
+  'name': 'HM92-01WHC motion detector'
 });
 ```
 
@@ -128,13 +138,13 @@ The module ID specified in EnOcean specifications consists of 24 bit, 32 bit, 48
 If no device was found, then `null` will be returned.
 
 ```JavaScript
-var enocean = require('node-enocean-utils');
+const enocean = require('node-enocean-utils');
 enocean.teach({
-	'id'  : '00 00 04 00 8F E0',
-	'eep' : 'D5-00-01',
-	'name': 'STM250J Door Sensor'
+  'id'  : '00 00 04 00 8F E0',
+  'eep' : 'D5-00-01',
+  'name': 'STM250J Door Sensor'
 });
-var device = enocean.getDeviceInfo('00 00 04 01 2B B4');
+let device = enocean.getDeviceInfo('00 00 04 01 2B B4');
 console.log(device['id']);
 console.log(device['name']);
 ```
@@ -148,35 +158,34 @@ STM250J Door Sensor
 
 Note that the module ID in the result is slightly different from the `id` passed to [`teach()`](#teach-method) method. All module ID are normalized to the same format internally.
 
-
 ### <a id="getLearnedDevices-method">getLearnedDevices()</a>
 
 This method returns all of the registered devices as an hash object. The key of the hash object is a normalized module ID of a device.
 
 ```JavaScript
-var enocean = require('node-enocean-utils');
+const enocean = require('node-enocean-utils');
 
 enocean.teach({
-	'id'  : '00 00 04 00 8F E0',
-	'eep' : 'D5-00-01',
-	'name': 'STM250J Door Sensor'
+  'id'  : '00 00 04 00 8F E0',
+  'eep' : 'D5-00-01',
+  'name': 'STM250J Door Sensor'
 });
 enocean.teach({
-	'id'  : '00 00 04 01 2B B4',
-	'eep' : 'A5-07-01',
-	'name': 'HM92-01WHC motion detector'
+  'id'  : '00 00 04 01 2B B4',
+  'eep' : 'A5-07-01',
+  'name': 'HM92-01WHC motion detector'
 });
 enocean.teach({
-	'id'  : '00 00 04 01 31 95',
-	'eep' : 'A5-02-05',
-	'name': 'STM 431J Temperature Sensor'
+  'id'  : '00 00 04 01 31 95',
+  'eep' : 'A5-02-05',
+  'name': 'STM 431J Temperature Sensor'
 });
 
-var devices = enocean.getLearnedDevices();
-for(var id in devices) {
-	var device = devices[id];
-	var cols = [device['id'], device['eep'], device['name']];
-	console.log(cols.join(' | '));
+let devices = enocean.getLearnedDevices();
+for(let id in devices) {
+  let device = devices[id];
+  let cols = [device['id'], device['eep'], device['name']];
+  console.log(cols.join(' | '));
 }
 ```
 
@@ -188,26 +197,60 @@ The result of the sample code above will be as follows:
 000004013195 | A5-02-05 | STM 431J Temperature Sensor
 ```
 
-### <a id="startMonitor-method">startMonitor(*params*, *callback*)</a>
+### <a id="startMonitor-method">startMonitor(*[params[, callback]]*)</a>
 
-This method starts monitoring incoming telegrams.
+This method establishes a connection to a USB serial port associated to your USB gateway dongle and starts to monitor telegrams coming from EnOcean devices. This method returns a `Promise` object by default.
 
-The 1st argument `params` is required. It must be a hash object having the properties as follows:
+```JavaScript
+enocean.startMonitor().then((gateway) => {
+  // Found a serial port and started to monitor successfully.
+  // Show the details of the found gateway
+  onsole.log(JSON.stringify(gateway, null, '  '));
+}).catch((error) => {
+  // Failed to find a serial port or failed to start to monitor.
+});
+```
+
+If this method is executed successfuly, a [`Gateway`](#Gateway-object) object containing information of the found gateway will be passed to the `resolve()` function. 
+
+You can pass two arguments optionally. The 1st argument must be a hash object containing the properties as follows:
 
 Property | Type   | Required | Description
 ---------|--------|----------|------------
-`path`   | String | required | The path of the USB gateway. If you use Windows OS, it should be like `COM3`. If you use Linux, it should be like `/dev/tty-usbserial1`.
+`path`   | String | optional | The path of the USB gateway. If you use Windows OS, it should be like `COM3`. If you use Linux, it should be like `/dev/tty-usbserial1`.
 `rate`   | Number | optional | The baud rate of the USB gateway. The default value of the `rate` property is 56700. If your USB gateway supports the default baud rate, you don't need to specify the property.
 
-When this method completes to start monitoring, the specified `callback` function will be called. No argument will be passed the callback function.
+Basically, you don't have to pass the 1st argument to this method because this method automatically detects the USB serial port associated to your USB gateway. Specify the argument only if the auto-detection failed in your host computer environment.
 
- The `callback` argument is optional. If the `callback` is not passed to this method, this method will do nothing when this method completes to start monitoring.
+The 2nd argument must be a callback function. Note that the 2nd argument is only for backward-compatibility with old versions of this module. Never specify the 2nd argument to this method now. The callback style will be deprecated in the future.
 
-### <a id="stopMonitor-method">stopMonitor(*callback*)</a>
+```JavaScript
+enocean.startMonitor({'path': 'COM7', 'rate': 57600}, (error) => {
+  // This is an old-fashioned coding style.
+  // Never do this.
+});
+```
 
-This method stops monitoring incoming telegrams. When this method completes to stop monitoring, the specified `callback` function will be called. No argument will be passed the `callback` function.
+### <a id="stopMonitor-method">stopMonitor(*[callback]*)</a>
 
-The `callback` argument is optional. If the `callback` is not passed to this method, this method will do nothing when this method completes to stop monitoring.
+This method stops monitoring incoming telegrams. This method returns a `Promise` object by default.
+
+```JavaScript
+enocean.stopMonitor().then(() => {
+  console.log('Stopped monitoring successfully.');
+}).catch((error) => {
+  console.error(error);
+});
+```
+
+You can pass a callback function as the 1st argument to this mothod. Note that the 1st argument is only for backward-compatibility with old versions of this module. Never pass the 1st argument to this method. The callback style will be deprecated in the future.
+
+```JavaScript
+enocean.stopMonitor((error) => {
+  // This is an old-fashioned coding style.
+  // Never do this.
+});
+```
 
 ---------------------------------------
 ## <a id="Events">Events</a>
@@ -242,6 +285,81 @@ var enocean = require('node-enocean-utils');
 ```
 
 As you know, this document explain how to use the `EnoceanUtils` object.
+
+### <a id="Gateway-object">`Gateway` object</a>
+
+The `Gateway` object represents an USB gateway dongle such as USB [300](https://www.enocean.com/en/enocean_modules/usb-300-oem/)/[300U](https://www.enocean.com/en/enocean_modules_902mhz/usb-300u-oem/)/[400J](https://www.enocean.com/en/enocean_modules_928mhz/usb-400j/). This object is just a hash object.
+
+This object consists of the properties as follows:
+
+Property         | Type   | Description
+:----------------|:-------|:------------
+`path`           | String | The identifier of the serial port. (e.g., `"/dev/ttyUSB0"`, `"COM7"`)
+`baudRate`       | Number | The baud rate. (e.g., `57600`)
+`manufacturer`   | String | The manufacturer of the USB gateway dongle or the USB serial chip in the USB gateway dongle. (e.g., `"EnOcean GmbH"`, `"FTDI"`)
+`vendorId`       | String | The vendor ID of the USB serial chip in the USB gateway dongle. (e.g., `"0403"`)
+`productId`      | String | The product ID of the USB serial chip in the USB gateway dongle or the name of the USB gateway dongle. (e.g., `"6001"`, `"EnOcean USB 400J DA"`)
+`serialNumber`   | String | The serial number of the USB serial chip in the USB gateway dongle. (e.g., `"FT5CTUI"`)
+`appVersion`     | String | The application version of the USB gateway dongle. (e.g., `"1.3.0.0"`)
+`chipId`         | String | The chip ID of the USB gateway dongle. (e.g., `"04014979"`)
+`chipVersion`    | String | The chip version of the USB gateway dongle. (e.g., `"69.79.4.0"`)
+`appDescription` | String | The application description of the USB gateway dongle. (e.g., `"DolphinV4_GWC"`)
+
+The meanings of the `manufacturer`, `vendorId`, `productId`, and `serialNumber` properties depend on the OS. On the other hand, the meanings of the `appVersion`, `chipId`, `chipVersion`, and `appDescription` properties are consistent on any OSes because they are obtained from the USB gateway dongle.
+
+#### Linux:
+
+```JavaScript
+{
+  "path": "/dev/ttyUSB0",
+  "baudRate": 57600,
+  "manufacturer": "EnOcean GmbH",
+  "vendorId": "0403",
+  "productId": "EnOcean USB 400J DA",
+  "serialNumber": "FT5CTUI",
+  "appVersion": "1.3.0.0",
+  "apiVersion": "1.4.4.0",
+  "chipId": "04014979",
+  "chipVersion": "69.79.4.0",
+  "appDescription": "DolphinV4_GWC"
+}
+```
+
+#### Mac OS X:
+
+```JavaScript
+{
+  "path": "/dev/tty.usbserial-FT5CTUI",
+  "baudRate": 57600,
+  "manufacturer": "EnOcean GmbH",
+  "vendorId": "0403",
+  "productId": "6001",
+  "serialNumber": "FT5CTUI",
+  "appVersion": "1.3.0.0",
+  "apiVersion": "1.4.4.0",
+  "chipId": "04014979",
+  "chipVersion": "69.79.4.0",
+  "appDescription": "DolphinV4_GWC"
+}
+```
+
+#### Windows:
+
+```JavaScript
+{
+  "path": "COM7",
+  "baudRate": 57600,
+  "manufacturer": "FTDI",
+  "vendorId": "0403",
+  "productId": "6001",
+  "serialNumber": "FT5CTUIA",
+  "appVersion": "1.3.0.0",
+  "apiVersion": "1.4.4.0",
+  "chipId": "04014979",
+  "chipVersion": "69.79.4.0",
+  "appDescription": "DolphinV4_GWC"
+}
+```
 
 ### <a id="Device-object">`Device` object</a>
 
@@ -446,6 +564,17 @@ Property      | Type   | Description
 --------------|--------|------------
 `contact`     | Number | This value will be 1 if the door was closed. Otherwise it will be 0.
 
+### F6-02-01
+
+* RORG : RPS Telegram (F6)
+* FUNC : Rocker Switch, 2 Rocker (02)
+* TYPE : Light and Blind Control - Application Style 1 (01)
+
+Property  | Type   | Description
+----------|--------|------------
+`pressed` | Number | If a button was pressed, this value will be 1. If a button was released, this value will be 0.
+`button`  | String | The button name which was pressed or released. This value is either 'BI', 'B0', 'AI', or 'A0'.
+
 ### F6-02-02
 
 * RORG : RPS Telegram (F6)
@@ -493,7 +622,9 @@ This script analyzes all incoming telegrams and shows you the results as formatt
 ]
 ```
 
-If you run this script, this script listens to incoming telegrams. Whenever an telegram comes, this script shows the result. This script takes two arguments. The 1st argument is the path of the serial port. The 1st argument is required. The 2nd argument is the baud rate of the serial port. The 2nd argument is optional. If you don't specify the 2nd argument, the baud rate is 56700.
+If you run this script, this script listens to incoming telegrams. Whenever an telegram comes, this script shows the result.
+
+This script takes two arguments. The 1st argument is the path of the serial port. The 1st argument is optional. If you don't specify the 1st argument, the path of the serial port will be detected automatically. The 2nd argument is the baud rate of the serial port. The 2nd argument is optional as well. If you don't specify the 2nd argument, the baud rate is 56700.
 
 This script shows the result as follows:
 
@@ -543,7 +674,7 @@ D:\GitHub\node-enocean-utils\tools>node analyzer.js COM7
 
 This script analyzes incoming Teach-In telegrams and shows you the results. If you run this script, this script listens to incoming Teach-In telegrams. Whenever an Teach-In telegram comes, this script shows the result.
 
-This script takes two arguments. The 1st argument is the path of the serial port. The 1st argument is required. The 2nd argument is the baud rate of the serial port. The 2nd argument is optional. If you don't specify the 2nd argument, the baud rate is 56700.
+This script takes two arguments. The 1st argument is the path of the serial port. The 1st argument is optional. If you don't specify the 1st argument, the path of the serial port will be detected automatically. The 2nd argument is the baud rate of the serial port. The 2nd argument is optional as well. If you don't specify the 2nd argument, the baud rate is 56700.
 
 This script shows the result as follows:
 
@@ -627,9 +758,16 @@ enocean.on('data-unknown', (telegram) => {
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.1.0 (2017-08-15)
+  * Rewrote all scripts to be modern coding style such as `let`, `const`, and `Promise`. The `startMonitor()` and `stopMonitor()` methods now return a `Promise` object.
+  * USB gateway dongle will be now automatically detected without specifying the path representing the USB serial port to the `startMonitor()` method.
+  * Newly supported the EnOcean Radio Protocol 1 (ERP1).
+  * Newly added "F6-02-01" (Light and Blind Control - Application Style 1) to the supported EEPs. Actually, it is completely as same as "F6-02-02" (Light and Blind Control - Application Style 2).
+  * Updated the manufacturer code/name mapping data.
+  * Fixed a bug of `analyzer.js` that an exeption was thrown if an telegram comes from an unknown device.
+
 * v0.0.6 (2017-08-02)
   * Fixed a bug that an exeption was thrown if an unexpected telegram comes.  
-
 
 ---------------------------------------
 ## <a id="License">License</a>

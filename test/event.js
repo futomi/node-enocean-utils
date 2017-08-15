@@ -1,7 +1,7 @@
 'use strict';
 process.chdir(__dirname);
 
-var known_device_list = [
+const known_device_list = [
 	{
 		'id'  : '00 00 00 2C 86 7E',
 		'eep' : 'F6-02-04',
@@ -50,7 +50,7 @@ var known_device_list = [
 	}
 ];
 
-var enocean = require('../lib/node-enocean-utils.js');
+const enocean = require('../lib/node-enocean-utils.js');
 
 known_device_list.forEach((device) => {
 	enocean.teach(device);

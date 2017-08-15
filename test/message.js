@@ -1,7 +1,7 @@
 'use strict';
 process.chdir(__dirname);
 
-var enocean = require('../lib/node-enocean-utils.js');
+const enocean = require('../lib/node-enocean-utils.js');
 
 enocean.teach({
 	'id'  : '00 00 04 01 31 95',

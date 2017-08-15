@@ -4,8 +4,6 @@ process.chdir(__dirname);
 const enocean = require('../lib/node-enocean-utils.js');
 
 // Teach the information of Enocean devices
-
-/*
 enocean.teach({
 	'id'  : '00 00 04 01 31 95',
 	'eep' : 'A5-02-05',
@@ -81,56 +79,26 @@ enocean.teach({
 	"eep" : "D5-00-01",
 	"name": "ETM502J Vibration sensor"
 });
-enocean.teach({
-	"id"  : "00 00 04 00 4E 5D",
-	"eep" : "A5-04-01",
-	"name": "Pressac Mini Temperature & Humidity (2)"
-});
-*/
-enocean.teach({
-	"id"  : "00 00 01 80 BA 56",
-	"eep" : "A5-02-05",
-	"name": "ESK 300 - STM 33x Self-powered temperature sensor"
-});
-enocean.teach({
-	"id"  : "00 00 FE FB DF 0F",
-	"eep" : "F6-02-01",
-	"name": "ESK 300 - STM 33x Self-powered temperature sensor"
-});
-enocean.teach({
-	"id"  : "00 00 01 A0 AC 80",
-	"eep" : "F6-02-01",
-	"name": "ESK 300 - ECO 200 & PTM 330 Push Button Generator"
-});
-enocean.teach({
-	"id"  : "00 00 01 80 B9 80",
-	"eep" : "A5-02-05",
-	"name": "ESK 300U - STM 33x Self-powered temperature sensor"
-});
-enocean.teach({
-	"id"  : "00 00 00 28 DE 1E",
-	"eep" : "F6-02-01",
-	"name": "ESK 300U - STM 33x Self-powered temperature sensor"
-});
-enocean.teach({
-	"id"  : "00 00 01 81 B4 94",
-	"eep" : "F6-02-01",
-	"name": "ESK 300U - ECO 200 & PTM 330 Push Button Generator"
-});
 
 // Start to monitor telegrams incoming from the Enocean devices
 //enocean.startMonitor({'path': 'COM7', 'rate': 57600});
-enocean.startMonitor(null, (error, gateway) => {
-	if(error) {
-		console.log('ERROR');
-		console.error(error);
-	} else {
-		console.log('The USB gateway was activated successfully:');
-		console.log(JSON.stringify(gateway, null, '  '));
-		// Set an event listener for 'data-known' events
-		enocean.on('data-known', (telegram) => {
-			let message = telegram['message'];
-			console.log(message['device']['name'] + ': ' + message['desc']);
-		});
-	}
+enocean.startMonitor().then((gateway) => {
+	console.log('The USB gateway was activated successfully:');
+	console.log(JSON.stringify(gateway, null, '  '));
+	// Set an event listener for 'data-known' events
+	enocean.on('data-known', (telegram) => {
+		let message = telegram['message'];
+		console.log(message['device']['name'] + ': ' + message['desc']);
+	});
+}).catch((error) => {
+	console.error(error);
 });
+
+
+setTimeout(() => {
+	enocean.stopMonitor().then(() => {
+		console.log('Stopped monitoring successfully.');
+	}).catch((error) => {
+		console.error(error);
+	});
+}, 10000);

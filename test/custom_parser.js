@@ -1,12 +1,12 @@
 'use strict';
 process.chdir(__dirname);
 
-var enocean = require('../lib/node-enocean-utils.js');
+const enocean = require('../lib/node-enocean-utils.js');
 enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 
 enocean.on('data-unknown', (telegram) => {
 	// Buffer object representing the Data DL
-	var buf = telegram['message']['data_dl_buffer'];
+	let buf = telegram['message']['data_dl_buffer'];
 
 	// If you know the EEP of the originated device,
 	// you can parse the Data DL based on EEP specification.
@@ -17,7 +17,7 @@ enocean.on('data-unknown', (telegram) => {
 	// the EEP 2.6.5 specification P17.
 
 	// The Data DL consists of a byte, that is 8bit.
-	var dd = buf.readUInt8(buf);
+	let dd = buf.readUInt8(buf);
 
 	// The 1st bit represents "Energy Bow" which means
 	// whether a button was pressed or released.
