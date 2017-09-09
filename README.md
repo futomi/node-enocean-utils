@@ -761,6 +761,8 @@ enocean.on('data-unknown', (telegram) => {
 
 [EnOcean Pi](https://www.element14.com/community/docs/DOC-55169/l/enocean-pi-transforms-raspberry-pi-into-a-wireless-gateway) is an EnOcean transceiver gateway for [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) presented by [element14](http://sg.element14.com/). The node-enocean-utils supports EnOcena Pi. This section describes how to use an EnOcean Pi through [Raspbian Stretch](https://www.raspberrypi.org/downloads/raspbian/) installed on a Raspberry Pi 3 Model B.
 
+[![Raspberry Pi 3 and EnOcean Pi](images/enocean-pi-small.jpg)](images/enocean-pi-large.jpg)
+
 To use an EnOcean Pi, it has to be attached to the GPIO pins on a Raspberry Pi. You can access it through a UART port. Unfortunately, Raspbian does not enable the UART port by default. You have to enable the UART port as follows:
 
 ### 1. Edit the cmdline.txt
