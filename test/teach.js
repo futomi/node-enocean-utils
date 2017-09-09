@@ -95,13 +95,19 @@ enocean.teach({
 enocean.teach({
 	"id"  : "00 00 FE FB DF 0F",
 	"eep" : "F6-02-01",
-	"name": "ESK 300 - STM 33x Self-powered temperature sensor"
+	"name": "ESK 300 - PTM 21x Push button transmitter module"
 });
 enocean.teach({
 	"id"  : "00 00 01 A0 AC 80",
 	"eep" : "F6-02-01",
 	"name": "ESK 300 - ECO 200 & PTM 330 Push Button Generator"
 });
+enocean.teach({
+	"id"  : "00 00 01 82 30 61",
+	"eep" : "A5-04-01",
+	"name": "Pressac Mini Temperature & Humidity 868MHz"
+});
+
 enocean.teach({
 	"id"  : "00 00 01 80 B9 80",
 	"eep" : "A5-02-05",
@@ -110,17 +116,24 @@ enocean.teach({
 enocean.teach({
 	"id"  : "00 00 00 28 DE 1E",
 	"eep" : "F6-02-01",
-	"name": "ESK 300U - STM 33x Self-powered temperature sensor"
+	"name": "ESK 300U - PTM 21x Push button transmitter module"
 });
 enocean.teach({
 	"id"  : "00 00 01 81 B4 94",
 	"eep" : "F6-02-01",
 	"name": "ESK 300U - ECO 200 & PTM 330 Push Button Generator"
 });
+enocean.teach({
+	"id"  : "00 00 01 8A 33 B0",
+	"eep" : "A5-04-01",
+	"name": "Pressac Mini Temperature & Humidity 902MHz"
+});
 
 // Start to monitor telegrams incoming from the Enocean devices
 //enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 enocean.startMonitor(null, (error, gateway) => {
+//enocean.startMonitor({'path':'/dev/ttyAMA0'}, (error, gateway) => {
+//enocean.startMonitor({'path':'/dev/ttyS0'}, (error, gateway) => {
 	if(error) {
 		console.log('ERROR');
 		console.error(error);

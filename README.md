@@ -1,7 +1,7 @@
 node-enocean-utils
 ===============
 
-The node-enocean-utils is a Node.js module which allows you to get and analyze telegrams came from EnOcean devices via a USB gateway such as USB [300](https://www.enocean.com/en/enocean_modules/usb-300-oem/)/[300U](https://www.enocean.com/en/enocean_modules_902mhz/usb-300u-oem/)/[400J](https://www.enocean.com/en/enocean_modules_928mhz/usb-400j/).
+The node-enocean-utils is a Node.js module which allows you to get and analyze telegrams came from EnOcean devices via a gateway such as USB [300](https://www.enocean.com/en/enocean_modules/usb-300-oem/)/[300U](https://www.enocean.com/en/enocean_modules_902mhz/usb-300u-oem/)/[400J](https://www.enocean.com/en/enocean_modules_928mhz/usb-400j/) or [EnOcean Pi](https://www.element14.com/community/docs/DOC-55169/l/enocean-pi-transforms-raspberry-pi-into-a-wireless-gateway).
 
 This module is based on the EnOcean specification as follows:
 
@@ -55,6 +55,7 @@ $ npm install node-enocean-utils
 	* [learn.js](#learn-js)
 * [How to know the module ID and the EEP](#How-to-know)
 * [How to create your custom EEP parser](#How-to-create)
+* [How to use an EnOcean Pi](#How-to-use-an-EnOcean-Pi)
 * [Release Note](#Release-Note)
 * [License](#License)
 
@@ -756,7 +757,106 @@ enocean.on('data-unknown', (telegram) => {
 ```
 
 ---------------------------------------
+## <a id="How-to-use-an-EnOcean-Pi">How to use an EnOcean Pi</a>
+
+[EnOcean Pi](https://www.element14.com/community/docs/DOC-55169/l/enocean-pi-transforms-raspberry-pi-into-a-wireless-gateway) is an EnOcean transceiver gateway for [Raspberry Pi](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/) presented by [element14](http://sg.element14.com/). The node-enocean-utils supports EnOcena Pi. This section describes how to use an EnOcean Pi through [Raspbian Stretch](https://www.raspberrypi.org/downloads/raspbian/) installed on a Raspberry Pi 3 Model B.
+
+To use an EnOcean Pi, it has to be attached to the GPIO pins on a Raspberry Pi. You can access it through a UART port. Unfortunately, Raspbian does not enable the UART port by default. You have to enable the UART port as follows:
+
+### 1. Edit the cmdline.txt
+
+```bash
+$ sudo vi /boot/cmdline.txt
+```
+
+By default, the description below should be written in the file:
+
+```
+dwc_otg.lpm_enable=0 console=serial0,115200 console=tty1 root=PARTUUID=b8a3eb43-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles
+```
+
+Rewrite it as follows:
+
+```
+dwc_otg.lpm_enable=0 console=tty1 root=PARTUUID=b8a3eb43-02 rootfstype=ext4 elevator=deadline fsck.repair=yes rootwait quiet splash plymouth.ignore-serial-consoles
+```
+
+In short, delete `"console=serial0,115200 "`.
+
+### 2. Edit the config.txt
+
+```bash
+$ sudo vi /boot/config.txt
+```
+
+Add the command in the bottom of the file as follows:
+
+```
+enable_uart=1
+```
+
+### 3. Reboot the Raspbian
+
+```bash
+$ sudo reboot
+```
+
+Now you can use the UART port on your Raspberry Pi.
+
+### 4. Connect to the EnOcean Pi using the node-enocean-utils
+
+You can access the EnOcean Pi through `/dev/ttyS0`. Unfortunately, the node-enocean-utils can not detect it automatically. You must pass the path (`dev/ttyS0`) to the `startMonitor()` method as follows:
+
+```JavaScript
+const enocean = require('node-enocean-utils');
+
+// Teach the information of Enocean devices
+enocean.teach({
+  "id"  : "00 00 FE FB DF 0F",
+  "eep" : "F6-02-01",
+  "name": "ESK 300 - PTM 21x Push button transmitter module"
+});
+
+// Start to monitor telegrams incoming from the Enocean devices
+enocean.startMonitor({
+  'path':'/dev/ttyS0'
+}).then((gateway) => {
+  console.log('The USB gateway was activated successfully:');
+  console.log(JSON.stringify(gateway, null, '  '));
+  // Set an event listener for 'data-known' events
+  enocean.on('data-known', (telegram) => {
+    let message = telegram['message'];
+    console.log(message['device']['name'] + ': ' + message['desc']);
+  });
+}).catch((error) => {
+  console.error(error);
+});
+```
+
+The code above will output as follows:
+
+```
+The USB gateway was activated successfully:
+{
+  "path": "/dev/ttyS0",
+  "baudRate": 57600,
+  "serialNumber": "",
+  "appVersion": "2.11.1.0",
+  "apiVersion": "2.6.3.0",
+  "chipId": "01a16448",
+  "chipVersion": "69.79.1.3",
+  "appDescription": "GATEWAYCTRL"
+}
+ESK 300 - PTM 21x Push button transmitter module: B0 pressed
+ESK 300 - PTM 21x Push button transmitter module: AI released
+```
+
+---------------------------------------
 ## <a id="Release-Note">Release Note</a>
+
+* v0.1.1 (2017-09-10)
+  * Fixed a bug that the `startMonitor()` method possibly resulted in non-response if a wrong path was passed.
+  * Officially supported EnOcean Pi as a EnOcean gateway.
 
 * v0.1.0 (2017-08-15)
   * Rewrote all scripts to be modern coding style such as `let`, `const`, and `Promise`. The `startMonitor()` and `stopMonitor()` methods now return a `Promise` object.
