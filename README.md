@@ -32,27 +32,27 @@ $ npm install node-enocean-utils
 
 * [Quick Start](#Quick-Start)
 * [Methods](#Methods)
-	* [`teach()`](#teach-method)
-	* [`getDeviceInfo()`](#getDeviceInfo-method)
-	* [`getLearnedDevices()`](#getLearnedDevices-method)
-	* [`startMonitor()`](#startMonitor-method)
-	* [`stopMonitor()`](#stopMonitor-method)
+  * [`teach()`](#teach-method)
+  * [`getDeviceInfo()`](#getDeviceInfo-method)
+  * [`getLearnedDevices()`](#getLearnedDevices-method)
+  * [`startMonitor()`](#startMonitor-method)
+  * [`stopMonitor()`](#stopMonitor-method)
 * [Events](#Events)
-	* [`data` event](#data-event)
-	* [`data-known` event](#data-known-event)
-	* [`data-unknown` event](#data-unknown-event)
-	* [`data-learn` event](#data-learn-event)
+  * [`data` event](#data-event)
+  * [`data-known` event](#data-known-event)
+  * [`data-unknown` event](#data-unknown-event)
+  * [`data-learn` event](#data-learn-event)
 * [Objects](#Objects)
-	* [`EnoceanUtils` object](#EnoceanUtils-object)
-	* [`Gateway` object](#Gateway-object)
-	* [`Device` object](#Device-object)
-	* [`Telegram` object](#Telegram-object)
-	* [`Message` object](#Message-object)
-	* [`Value` object](#Value-object)
+  * [`EnoceanUtils` object](#EnoceanUtils-object)
+  * [`Gateway` object](#Gateway-object)
+  * [`Device` object](#Device-object)
+  * [`Telegram` object](#Telegram-object)
+  * [`Message` object](#Message-object)
+  * [`Value` object](#Value-object)
 * [Supported EEPs](#Supported-EEPs)
 * [Command Line Tools](#Command-Line-Tools)
-	* [analyzer.js](#analyzer-js)
-	* [learn.js](#learn-js)
+  * [analyzer.js](#analyzer-js)
+  * [learn.js](#learn-js)
 * [How to know the module ID and the EEP](#How-to-know)
 * [How to create your custom EEP parser](#How-to-create)
 * [How to use an EnOcean Pi](#How-to-use-an-EnOcean-Pi)
@@ -422,15 +422,15 @@ Property          | Type    | Description
 var enocean = require('node-enocean-utils');
 
 enocean.teach({
-	'id'  : '00 00 04 01 31 95',
-	'eep' : 'A5-02-05',
-	'name': 'STM 431J Temperature Sensor'
+  'id'  : '00 00 04 01 31 95',
+  'eep' : 'A5-02-05',
+  'name': 'STM 431J Temperature Sensor'
 });
 
 enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 
 enocean.on('data-known', (telegram) => {
-	console.dir(telegram['message']);
+  console.dir(telegram['message']);
 });
 ```
 
@@ -470,37 +470,37 @@ You can obtain the EEP-specific report from the `Value` object which you can acc
 var enocean = require('node-enocean-utils');
 
 enocean.teach({
-	'id'  : '00 00 04 00 8F E0',
-	'eep' : 'D5-00-01',
-	'name': 'STM250J Door Sensor'
+  'id'  : '00 00 04 00 8F E0',
+  'eep' : 'D5-00-01',
+  'name': 'STM250J Door Sensor'
 });
 
 enocean.teach({
-	'id'  : '00 00 00 2C 86 5C',
-	'eep' : 'F6-02-04',
-	'name': 'ESM210R Rocker Switch Single'
+  'id'  : '00 00 00 2C 86 5C',
+  'eep' : 'F6-02-04',
+  'name': 'ESM210R Rocker Switch Single'
 });
 
 enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 
 enocean.on('data-known', (telegram) => {
-	var value = telegram['message']['value']; // Value object
-	var eep = telegram['message']['eep'];
-	if(eep === 'D5-00-01') {
-		// STM250J Door Sensor
-		if(value['contact'] === 1) {
-			console.log('The door was closed.');
-		} else if(value['contact'] === 0) {
-			console.log('The door was opened.');
-		}
-	} else if(eep === 'F6-02-04') {
-		// ESM210R Rocker Switch Single
-		if(value['pressed'] === 1) {
-			console.log(value['button'] + ' was pressed.');
-		} else if(value['pressed'] === 0) {
-			console.log(value['button'] + ' was released.');
-		}
-	}
+  var value = telegram['message']['value']; // Value object
+  var eep = telegram['message']['eep'];
+  if(eep === 'D5-00-01') {
+    // STM250J Door Sensor
+    if(value['contact'] === 1) {
+      console.log('The door was closed.');
+    } else if(value['contact'] === 0) {
+      console.log('The door was opened.');
+    }
+  } else if(eep === 'F6-02-04') {
+    // ESM210R Rocker Switch Single
+    if(value['pressed'] === 1) {
+      console.log(value['button'] + ' was pressed.');
+    } else if(value['pressed'] === 0) {
+      console.log(value['button'] + ' was released.');
+    }
+  }
 });
 ```
 The two type of devices are registered, a door sensor and a rocker switch. In the callback function for the `data-known` event, the EEP is determined from `Telegram.message.eep` property. As you can see, the properties supported by the `Value` object are different depending on the EEP. See the section "[Supported EEPs](#Supported-EEPs)" for details.
@@ -599,6 +599,21 @@ Property  | Type   | Description
 `button`  | String | The button name which was pressed or released. This value is either 'BI', 'B0', 'AI', or 'A0'.
 
 
+### D2-32-02
+
+* RORG : VLD Telegram (D2)
+* FUNC : A.C. Current Clamp (32)
+* TYPE : Type 0x02 (02)
+
+Property  | Type    | Description
+:---------|:--------|:------------
+`fail`    | Boolean | Power Fail.
+`ch1`     | Number  | Current value of the channel 1. The unit is "A" (ampere).
+`ch2`     | Number  | Current value of the channel 2. The unit is "A" (ampere).
+`ch3`     | Number  | Current value of the channel 3. The unit is "A" (ampere).
+
+
+
 ---------------------------------------
 ## <a id="Command-Line-Tools">Command Line Tools</a>
 
@@ -610,16 +625,16 @@ This script analyzes all incoming telegrams and shows you the results as formatt
 
 ```JavaScript
 [
-	{
-		"id"  : "00 00 04 00 8F E0",
-		"eep" : "D5-00-01",
-		"name": "STM250J Door Sensor"
-	},
-	{
-		"id"  : "00 00 04 01 31 95",
-		"eep" : "A5-02-05",
-		"name": "STM 431J Temperature Sensor"
-	}
+  {
+    "id"  : "00 00 04 00 8F E0",
+    "eep" : "D5-00-01",
+    "name": "STM250J Door Sensor"
+  },
+  {
+    "id"  : "00 00 04 01 31 95",
+    "eep" : "A5-02-05",
+    "name": "STM 431J Temperature Sensor"
+  }
 ]
 ```
 
@@ -721,38 +736,38 @@ var enocean = require('node-enocean-utils');
 enocean.startMonitor({'path': 'COM7', 'rate': 57600});
 
 enocean.on('data-unknown', (telegram) => {
-	// Buffer object representing the Data DL
-	var buf = telegram['message']['data_dl_buffer'];
+  // Buffer object representing the Data DL
+  var buf = telegram['message']['data_dl_buffer'];
 
-	// If you know the EEP of the originated device,
-	// you can parse the Data DL based on EEP specification.
-	// The code below assumes that the EEP is F6-02-04.
-	// This EEP represents the Light and blind control ERP2
-	// such as rocker switches.
-	// The specification for F6-02-04 is described in
-	// the EEP 2.6.5 specification P17.
+  // If you know the EEP of the originated device,
+  // you can parse the Data DL based on EEP specification.
+  // The code below assumes that the EEP is F6-02-04.
+  // This EEP represents the Light and blind control ERP2
+  // such as rocker switches.
+  // The specification for F6-02-04 is described in
+  // the EEP 2.6.5 specification P17.
 
-	// The Data DL consists of a byte, that is 8bit.
-	var dd = buf.readUInt8(buf);
+  // The Data DL consists of a byte, that is 8bit.
+  var dd = buf.readUInt8(buf);
 
-	// The 1st bit represents "Energy Bow" which means
-	// whether a button was pressed or released.
-	// In this case, releasing a button is not necessary.
-	if((dd & 0b10000000) === 0) {
-		return;
-	}
+  // The 1st bit represents "Energy Bow" which means
+  // whether a button was pressed or released.
+  // In this case, releasing a button is not necessary.
+  if((dd & 0b10000000) === 0) {
+    return;
+  }
 
-	// The bit from 5th to 8th represents whether the
-	// button was pressed or released.
-	if(dd & 0b00001000) {
-		console.log('The button BI was pressed.');
-	} else if(dd & 0b00000100) {
-		console.log('The button B0 was pressed.');
-	} else if(dd & 0b00000010) {
-		console.log('The button AI was pressed.');
-	} else if(dd & 0b00000001) {
-		console.log('The button A0 was pressed.');
-	}
+  // The bit from 5th to 8th represents whether the
+  // button was pressed or released.
+  if(dd & 0b00001000) {
+    console.log('The button BI was pressed.');
+  } else if(dd & 0b00000100) {
+    console.log('The button B0 was pressed.');
+  } else if(dd & 0b00000010) {
+    console.log('The button AI was pressed.');
+  } else if(dd & 0b00000001) {
+    console.log('The button A0 was pressed.');
+  }
 });
 ```
 
@@ -856,6 +871,9 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.2.0 (2018-04-24)
+  * Newly added "D2-32-02" (A.C. Current Clamp - Type 0x02) to the supported EEPs.
+
 * v0.1.1 (2017-09-10)
   * Fixed a bug that the `startMonitor()` method possibly resulted in non-response if a wrong path was passed.
   * Officially supported EnOcean Pi as a EnOcean gateway.
@@ -876,7 +894,7 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 
 The MIT License (MIT)
 
-Copyright (c) 2016 - 2017 Futomi Hatano
+Copyright (c) 2016 - 2018 Futomi Hatano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

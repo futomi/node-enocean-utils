@@ -9,7 +9,14 @@ enocean.teach({
 	'name': 'STM 431J Temperature Sensor'
 });
 
-enocean.startMonitor({'path': 'COM7', 'rate': 57600});
+enocean.teach({
+	"id"  : "00 00 04 01 86 39",
+	"eep" : "D2-32-02",
+	"name": "Pressac Three Channel CT Clamp V3 928MHz"
+});
+
+//enocean.startMonitor({'path': 'COM7', 'rate': 57600});
+enocean.startMonitor();
 
 enocean.on('data-known', (telegram) => {
 	console.dir(telegram['message']);

@@ -5,7 +5,6 @@ const enocean = require('../lib/node-enocean-utils.js');
 
 // Teach the information of Enocean devices
 
-/*
 enocean.teach({
 	'id'  : '00 00 04 01 31 95',
 	'eep' : 'A5-02-05',
@@ -86,7 +85,8 @@ enocean.teach({
 	"eep" : "A5-04-01",
 	"name": "Pressac Mini Temperature & Humidity (2)"
 });
-*/
+
+/*
 enocean.teach({
 	"id"  : "00 00 01 80 BA 56",
 	"eep" : "A5-02-05",
@@ -128,6 +128,7 @@ enocean.teach({
 	"eep" : "A5-04-01",
 	"name": "Pressac Mini Temperature & Humidity 902MHz"
 });
+*/
 
 // Start to monitor telegrams incoming from the Enocean devices
 //enocean.startMonitor({'path': 'COM7', 'rate': 57600});
