@@ -531,6 +531,17 @@ Property       | Type   | Description
 `humidity`     | Number | This value is the humidity measured by the originated sensor. The unit is percent (%).
 `temperature`  | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃). If the originated sensor does not have temperature sensor availability, this value is null.
 
+### A5-06-02
+
+* RORG : 4BS Telegram (A5)
+* FUNC : Light Sensor (06)
+* TYPE : Range 0lx to 1020lx (02)
+
+Property      | Type   | Description
+--------------|--------|------------
+`ill`         | Number | This value is the illumination measured by the originated sensor. The unit is lx.
+`svc`         | Number | This value represents the supply voltage. This value is a floating number between 0 and 5. The unit is V.
+
 
 ### A5-07-01
 
@@ -870,6 +881,9 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
+
+* v0.2.1 (2018-06-01)
+  * Newly added "A5-06-02" (Light Sensor - Range 0lx to 1020lx) to the supported EEPs.
 
 * v0.2.0 (2018-04-24)
   * Newly added "D2-32-02" (A.C. Current Clamp - Type 0x02) to the supported EEPs.
