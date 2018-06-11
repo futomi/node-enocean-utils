@@ -128,5 +128,15 @@
 		"id": "00 00 04 00 74 20",
 		"eep": "A5-06-02",
 		"name": "ERMINE Light Sensor"
+	},
+	{
+		"id": "00 00 04 01 56 CD",
+		"eep": "A5-05-01",
+		"name": "ERMINE Barometric Sensor #1"
+	},
+	{
+		"id": "00 00 04 01 56 E2",
+		"eep": "A5-05-01",
+		"name": "ERMINE Barometric Sensor #2"
 	}
 ]
