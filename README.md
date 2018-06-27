@@ -892,19 +892,18 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.2.3 (2018-06-27)
+  * Newly added "A5-04-03" (Temperature and Humidity Sensor - Range -20°C to +60°C 10bit-measurement and 0% to 100%) to the supported EEPs.
+  * Fixed the type of values of EEP "A5-04-01" (temperature and humidity). Now the type of values is `Number` (was `String`).
 * v0.2.2 (2018-06-12)
   * Newly added "A5-05-01" (Barometric Sensor - Range 500 to 1150 hPa) to the supported EEPs.
-
 * v0.2.1 (2018-06-01)
   * Newly added "A5-06-02" (Light Sensor - Range 0lx to 1020lx) to the supported EEPs.
-
 * v0.2.0 (2018-04-24)
   * Newly added "D2-32-02" (A.C. Current Clamp - Type 0x02) to the supported EEPs.
-
 * v0.1.1 (2017-09-10)
   * Fixed a bug that the `startMonitor()` method possibly resulted in non-response if a wrong path was passed.
   * Officially supported EnOcean Pi as a EnOcean gateway.
-
 * v0.1.0 (2017-08-15)
   * Rewrote all scripts to be modern coding style such as `let`, `const`, and `Promise`. The `startMonitor()` and `stopMonitor()` methods now return a `Promise` object.
   * USB gateway dongle will be now automatically detected without specifying the path representing the USB serial port to the `startMonitor()` method.
@@ -912,7 +911,6 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
   * Newly added "F6-02-01" (Light and Blind Control - Application Style 1) to the supported EEPs. Actually, it is completely as same as "F6-02-02" (Light and Blind Control - Application Style 2).
   * Updated the manufacturer code/name mapping data.
   * Fixed a bug of `analyzer.js` that an exeption was thrown if an telegram comes from an unknown device.
-
 * v0.0.6 (2017-08-02)
   * Fixed a bug that an exeption was thrown if an unexpected telegram comes.  
 
