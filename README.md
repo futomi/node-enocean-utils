@@ -37,6 +37,7 @@ $ npm install node-enocean-utils
   * [`getLearnedDevices()`](#getLearnedDevices-method)
   * [`startMonitor()`](#startMonitor-method)
   * [`stopMonitor()`](#stopMonitor-method)
+  * [`emulateIncomingTelegram()`](#emulateIncomingTelegram-method)
 * [Events](#Events)
   * [`data` event](#data-event)
   * [`data-known` event](#data-known-event)
@@ -250,6 +251,28 @@ You can pass a callback function as the 1st argument to this mothod. Note that t
 enocean.stopMonitor((error) => {
   // This is an old-fashioned coding style.
   // Never do this.
+});
+```
+
+### <a id="emulateIncomingTelegram-method">emulateIncomingTelegram(*telegram*)</a>
+
+This method emulates an incoming telegram mainly for debug. Calling this method with a hex data representing a telegram, this module acts as if the telegram is received via the USB gateway. This method returns nothing.
+
+Note that your USB gateway has to be accessible via a serial port to use this method.
+
+```javascript
+// Start to monitor telegrams incoming from the Enocean devices
+enocean.startMonitor().then((gateway) => {
+  // Set an event listener for 'data-known' events
+  enocean.on('data', (telegram) => {
+    console.log(JSON.stringify(telegram.message, null, '  '));
+  });
+  // A hex string representing a telegram
+  let hex = '55 00 0A 07 01 EB A5 00 00 5F 08 01 80 BA 56 00 01 FF FF FF FF 37 00 BE';
+  // Emulate an incoming telegram
+  enocean.emulateIncomingTelegram(hex);
+}).catch((error) => {
+  console.error(error);
 });
 ```
 
@@ -892,6 +915,10 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.3.0 (2019-03-26)
+  * The telegram parser supported the UTE (Universal Uni-and Bidirectional Teach-in) telegram of RADIO_ERP1. (Thanks to Andreas)
+  * Updated the [mapping table of manufacturer ID and manufacturer name](https://github.com/futomi/node-enocean-utils/blob/master/lib/node-enocean-utils-manufacturer.js).
+  * Newly added the [`emulateIncomingTelegram()`](#emulateIncomingTelegram-method) method to the [`EnoceanUtils`](#EnoceanUtils-object) object.
 * v0.2.3 (2018-06-27)
   * Newly added "A5-04-03" (Temperature and Humidity Sensor - Range -20°C to +60°C 10bit-measurement and 0% to 100%) to the supported EEPs.
   * Fixed the type of values of EEP "A5-04-01" (temperature and humidity). Now the type of values is `Number` (was `String`).
@@ -919,7 +946,7 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 
 The MIT License (MIT)
 
-Copyright (c) 2016 - 2018 Futomi Hatano
+Copyright (c) 2016 - 2019 Futomi Hatano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
