@@ -50,6 +50,7 @@ $ npm install node-enocean-utils
   * [`Telegram` object](#Telegram-object)
   * [`Message` object](#Message-object)
   * [`Value` object](#Value-object)
+    * [UTE (Universal Uni-and Bidirectional Teach-in)](#Value-object-ute)
 * [Supported EEPs](#Supported-EEPs)
 * [Command Line Tools](#Command-Line-Tools)
   * [analyzer.js](#analyzer-js)
@@ -431,6 +432,7 @@ Property          | Type    | Description
 `value`           | Object  | The [`Value`](#Value-object) representing the EEP-specific report from the originated device. This value is an hash object. The properties in the object depends on the EEP. See the section "[Value] object](#Value-object)" and the section "[Supported EEPs](#Supported-EEPs)" in details.
 `desc`            | String  | This value represents the report from the originated device. This value is a string summarizing the report.
 `learn`           | Boolean | When the telegram is a Teach-In telegram, this value will be true, otherwise false.
+`ute`             | Boolean | If the telegram is for UTE (Universal Uni-and Bidirectional Teach-in) telegram, this value is `true`. Otherwise, this value is `false`. Note that this property exists only when the telegram is a Teach-In telegram (i.e., when the value of `learn` property is `true`).
 `rorg`            | Number  | The R-ORG part in the EEP.
 `rorg_desc`       | String  | The meaning of the R-ORG.
 `func`            | Number  | The FUNC part in the EEP.
@@ -526,7 +528,42 @@ enocean.on('data-known', (telegram) => {
   }
 });
 ```
+
 The two type of devices are registered, a door sensor and a rocker switch. In the callback function for the `data-known` event, the EEP is determined from `Telegram.message.eep` property. As you can see, the properties supported by the `Value` object are different depending on the EEP. See the section "[Supported EEPs](#Supported-EEPs)" for details.
+
+#### <a id="Value-object-ute">UTE (Universal Uni-and Bidirectional Teach-in)</a>
+
+If the telegram is an UTE (Universal Uni-and Bidirectional Teach-in) telegram, the structure of the `Value` object is as follows:
+
+Property        | Type    | Description
+:---------------|:--------|:-----------
+`dir`           | Integer | Uni-bi-directional communication (EEP operation). The value is `0` or `1`.
+`dir_desc`      | String  | If the value of the `dir` is `0`, this value is `"Unidirectional communication (EEP opeartion)"`. If it is `1`, this value is `"Bidirectional communication (EEP opeartion)"`.
+`expected`      | Integer | EEP Teach-In-Response message expected y/n. The value is `0` or `1`.
+`expected_desc` | String  | If the value of the `expected` is `0`. this value is `"EEP Teach-In Response message expected"`. If it is `1`, this value is `"No EEP Teach-In-Response message expected"`.
+`accepted`      | Integer | Request accepted. This value is `0`, `1`, `2`, or `3`.
+`accepted_desc` | String  | If the value of the `accepted` is `0`, this value is `"Request not accepted, general reason"`. If it is `1`, this value is `"Request accepted, teach-in successful"`. If it is `2`, this value is `"Request accepted, deletion of teach-in successful"`. If it is `3`, this value is `"Request not accepted, EEP not supported"`.
+`cmd`           | Integer | Command identifier (CMD). The value is `0` or `1`.
+`cmd_desc`      | String  | If the value of the `cmd` is `0`, this value is `"EEP Teach-In Query"`. If it is `1`, this value is `"EEP Teach-In Response"`.
+`channel`       | Integer | Number of individual channel to be taught in. The value could be an integer in the range of `0` to `255`.
+`channel_desc`  | String  | If the value of the `channel` is `255`, this value is `"Teach-in of all channels supported by the device"`. Otherwise, this value is as same as the `channel` (Note that the type of value is changed from `Number` to `String`.)
+
+```javascript
+{
+  "dir": 1,
+  "dir_desc": "Bidirectional communication (EEP opeartion)",
+  "expected": 0,
+  "expected_desc": "EEP Teach-In Response message expected",
+  "accepted": 0,
+  "accepted_desc": "Request not accepted, general reason",
+  "cmd": 0,
+  "cmd_desc": "EEP Teach-In Query",
+  "channel": 255,
+  "channel_desc": "Teach-in of all channels supported by the device"
+}
+```
+
+For now, this module just supports parsing incoming UTE telegrams (EEP Teach-In Queries). This module does not send any UTE responses (EEP Teach-In Responses).
 
 ---------------------------------------
 ## <a id="Supported-EEPs">Supported EEPs</a>
@@ -915,6 +952,8 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.3.1 (2019-03-27)
+  * Tweaked the structure of [`message`](#Message-object) object for UTE and added the [description](#Value-object-ute) for UTE in this document.
 * v0.3.0 (2019-03-26)
   * The telegram parser supported the UTE (Universal Uni-and Bidirectional Teach-in) telegram of RADIO_ERP1. (Thanks to Andreas)
   * Updated the [mapping table of manufacturer ID and manufacturer name](https://github.com/futomi/node-enocean-utils/blob/master/lib/node-enocean-utils-manufacturer.js).
