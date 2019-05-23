@@ -952,6 +952,8 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.3.2 (2019-05-23)
+  * Fixed a bug that an exeption was thrown when an unknown telegram was received.
 * v0.3.1 (2019-03-27)
   * Tweaked the structure of [`message`](#Message-object) object for UTE and added the [description](#Value-object-ute) for UTE in this document.
 * v0.3.0 (2019-03-26)
