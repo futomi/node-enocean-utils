@@ -952,6 +952,8 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.4.0 (2019-08-01)
+  * Improved the serial port handling so that the [`startMonitor()`](#startmonitorparams-callback) method works well when the `path` is specified even if the [udev](https://en.wikipedia.org/wiki/Udev) does not work, which is used by the `serialport` module inside. This improvement was done mainly for embedded linux.
 * v0.3.2 (2019-05-23)
   * Fixed a bug that an exeption was thrown when an unknown telegram was received.
 * v0.3.1 (2019-03-27)
