@@ -35,6 +35,7 @@ $ npm install node-enocean-utils
   * [`teach()`](#teach-method)
   * [`getDeviceInfo()`](#getDeviceInfo-method)
   * [`getLearnedDevices()`](#getLearnedDevices-method)
+  * [`unteach()`](#unteach-method)
   * [`startMonitor()`](#startMonitor-method)
   * [`stopMonitor()`](#stopMonitor-method)
   * [`emulateIncomingTelegram()`](#emulateIncomingTelegram-method)
@@ -198,6 +199,20 @@ The result of the sample code above will be as follows:
 000004008FE0 | D5-00-01 | STM250J Door Sensor
 000004012BB4 | A5-07-01 | HM92-01WHC motion detector
 000004013195 | A5-02-05 | STM 431J Temperature Sensor
+```
+
+### <a id="unteach-method">unteach(*id*)</a>
+
+This method unregisters a device. The `id` must be passed as the 1st argument. If the specified `id` is found, the relevant device will be deleted, then the [`Device`](#Device-object) object representing the deleted device will be returned. Otherwise, `null` will be returned.
+
+```JavaScript
+let deleted_device = enocean.unteach('00 00 04 01 2B B4');
+if(deleted_device) {
+  console.log('The device was deleted.');
+  console.log(deleted_device);
+} else {
+  console.log('No device was deleted.');
+}
 ```
 
 ### <a id="startMonitor-method">startMonitor(*[params[, callback]]*)</a>
@@ -952,6 +967,8 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.4.1 (2020-01-08)
+  * Newly added the [`unteach()`](#unteach-method) method.
 * v0.4.0 (2019-08-01)
   * Improved the serial port handling so that the [`startMonitor()`](#startmonitorparams-callback) method works well when the `path` is specified even if the [udev](https://en.wikipedia.org/wiki/Udev) does not work, which is used by the `serialport` module inside. This improvement was done mainly for embedded linux.
 * v0.3.2 (2019-05-23)
@@ -989,7 +1006,7 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 
 The MIT License (MIT)
 
-Copyright (c) 2016 - 2019 Futomi Hatano
+Copyright (c) 2016 - 2020 Futomi Hatano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
