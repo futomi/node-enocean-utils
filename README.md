@@ -14,10 +14,10 @@ See the [EnOcean web site](https://www.enocean.com/en/knowledge-base/) for detai
 
 ## Dependencies
 
-- [Node.js](https://nodejs.org/en/) 4.4 +
-  - Though the node-enocean-utils works on Node 4 for now, it is strongly recommended to use Node 6 or newer. The node-enocean-utils will not support Node 4 in the future.
-- [serialport](https://www.npmjs.com/package/serialport) 5.0.0 +
-  - If the serialport module has been already installed in you host computer, check the version. The node-enocean-utils now does not support older versions than 5.0.0 of the serialport module.
+- [Node.js](https://nodejs.org/en/) 8.6.0 +
+  - Though the node-enocean-utils works on Node 4 for now, it is strongly recommended to use Node 8 or newer. The node-enocean-utils will not support old versions of Node in the future.
+- [serialport](https://www.npmjs.com/package/serialport) 8.0.0 +
+  - If the serialport module has been already installed in you host computer, check the version. The node-enocean-utils now does not support older versions than 5.0.0 of the serialport module. It is strongly recommended to use the version 8.0.6 or grater. The node-enocean-utils will not support old versions of the serialport in the future. 
 
 ## Installation
 
@@ -967,6 +967,8 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.4.2 (2020-01-21)
+  * Supported the latest version of the [serialport](https://www.npmjs.com/package/serialport) (Current version is 8.0.6).
 * v0.4.1 (2020-01-08)
   * Newly added the [`unteach()`](#unteach-method) method.
 * v0.4.0 (2019-08-01)
