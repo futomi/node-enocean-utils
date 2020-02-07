@@ -24,6 +24,6 @@
   },
   "readmeFilename": "README.md",
   "dependencies": {
-    "serialport": ">=5.0.0"
+    "serialport": ">=8.6.0"
   }
 }
