@@ -53,6 +53,18 @@ $ npm install node-enocean-utils
   * [`Value` object](#Value-object)
     * [UTE (Universal Uni-and Bidirectional Teach-in)](#Value-object-ute)
 * [Supported EEPs](#Supported-EEPs)
+  * [A5-02-05: Temperature Sensor (Range 0°C to +40°C)](#Supported-EEPs-A5-02-05)
+  * [A5-04-01: Temperature and Humidity Sensor (Range 0°C to +40°C and 0% to 100%)](#Supported-EEPs-A5-04-01)
+  * [A5-05-01: Barometric Sensor (Range 500 to 1150 hPa)](#Supported-EEPs-A5-05-01)
+  * [A5-06-02: Light Sensor (Range 0lx to 1020lx)](#Supported-EEPs-A5-06-02)
+  * [A5-06-05: Light Sensor (Range 0lx to 10200lx)](#Supported-EEPs-A5-06-05)
+  * [A5-07-01: Occupancy with Supply voltage monitor](#Supported-EEPs-A5-07-01)
+  * [A5-09-04: CO2 Sensor](#Supported-EEPs-A5-09-04)
+  * [D5-00-01: Single Input Contact](#Supported-EEPs-D5-00-01)
+  * [F6-02-01: Light and Blind Control - Application Style 1](#Supported-EEPs-F6-02-01)
+  * [F6-02-02: Light and Blind Control - Application Style 2](#Supported-EEPs-F6-02-02)
+  * [F6-02-04: Light and blind control ERP2](#Supported-EEPs-F6-02-04)
+  * [D2-32-02: A.C. Current Clamp (Type 0x02)](#Supported-EEPs-D2-32-02)
 * [Command Line Tools](#Command-Line-Tools)
   * [analyzer.js](#analyzer-js)
   * [learn.js](#learn-js)
@@ -585,7 +597,7 @@ For now, this module just supports parsing incoming UTE telegrams (EEP Teach-In 
 
 This module supports the EEPs as follows. This section describes the structure of the `Value` object for each EEP as well.
 
-### A5-02-05
+### <a id="Supported-EEPs-A5-02-05">A5-02-05</a>
 
 * RORG : 4BS Telegram (A5)
 * FUNC : Temperature Sensors (02)
@@ -595,7 +607,7 @@ Property      | Type   | Description
 --------------|--------|------------
 `temperature` | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃).
 
-### A5-04-01
+### <a id="Supported-EEPs-A5-04-01">A5-04-01</a>
 
 * RORG : 4BS Telegram (A5)
 * FUNC : Temperature and Humidity Sensor (04)
@@ -606,7 +618,7 @@ Property       | Type   | Description
 `humidity`     | Number | This value is the humidity measured by the originated sensor. The unit is percent (%).
 `temperature`  | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃). If the originated sensor does not have temperature sensor availability, this value is null.
 
-### A5-05-01
+### <a id="Supported-EEPs-A5-05-01">A5-05-01</a>
 
 * RORG : 4BS Telegram (A5)
 * FUNC : Barometric Sensor (05)
@@ -617,7 +629,7 @@ Property      | Type   | Description
 `bar`         | Number | This value is the barometric pressure. The unit is hPa.
 `ttp`         | Number | This value represents the telegram type. The value `0` means "Heartbeart". The value `1` means "Event triggered".
 
-### A5-06-02
+### <a id="Supported-EEPs-A5-06-02">A5-06-02</a>
 
 * RORG : 4BS Telegram (A5)
 * FUNC : Light Sensor (06)
@@ -628,7 +640,18 @@ Property      | Type   | Description
 `ill`         | Number | This value is the illumination measured by the originated sensor. The unit is lx.
 `svc`         | Number | This value represents the supply voltage. This value is a floating number between 0 and 5. The unit is V.
 
-### A5-07-01
+### <a id="Supported-EEPs-A5-06-05">A5-06-05</a>
+
+* RORG : 4BS Telegram (A5)
+* FUNC : Light Sensor (06)
+* TYPE : Range 0lx to 10200lx (05)
+
+Property      | Type   | Description
+--------------|--------|------------
+`ill`         | Number | This value is the illumination measured by the originated sensor. The unit is lx.
+`svc`         | Number | This value represents the supply voltage. This value is a floating number between 0 and 5. The unit is V.
+
+### <a id="Supported-EEPs-A5-07-01">A5-07-01</a>
 
 * RORG : 4BS Telegram (A5)
 * FUNC : Occupancy Sensor (07)
@@ -639,7 +662,7 @@ Property      | Type   | Description
 `pirs`        | Number | This value represents the PIR status. If the occupancy sensor detect any motion, this value will be 1, otherwise 0.
 `svc`         | Number | This value represents the supply voltage. This value is a floating number between 0 and 5. The unit is V.
 
-### A5-09-04
+### <a id="Supported-EEPs-A5-09-04">A5-09-04</a>
 
 * RORG : 4BS Telegram (A5)
 * FUNC : Gas Sensor (09)
@@ -651,7 +674,7 @@ Property       | Type   | Description
 `concentration`| Number | This value is the CO2 concentration measured by the originated sensor. The unit is ppm.
 `temperature`  | Number | This value is the temperature measured by the originated temperature sensor. The unit is Celsius (℃). If the originated sensor does not have temperature sensor availability, this value is null.
 
-### D5-00-01
+### <a id="Supported-EEPs-D5-00-01">D5-00-01</a>
 
 * RORG : 1BS Telegram (D5)
 * FUNC : Contacts and Switches (00)
@@ -661,7 +684,7 @@ Property      | Type   | Description
 --------------|--------|------------
 `contact`     | Number | This value will be 1 if the door was closed. Otherwise it will be 0.
 
-### F6-02-01
+### <a id="Supported-EEPs-F6-02-01">F6-02-01</a>
 
 * RORG : RPS Telegram (F6)
 * FUNC : Rocker Switch, 2 Rocker (02)
@@ -672,7 +695,7 @@ Property  | Type   | Description
 `pressed` | Number | If a button was pressed, this value will be 1. If a button was released, this value will be 0.
 `button`  | String | The button name which was pressed or released. This value is either 'BI', 'B0', 'AI', or 'A0'.
 
-### F6-02-02
+### <a id="Supported-EEPs-F6-02-02">F6-02-02</a>
 
 * RORG : RPS Telegram (F6)
 * FUNC : Rocker Switch, 2 Rocker (02)
@@ -683,7 +706,7 @@ Property  | Type   | Description
 `pressed` | Number | If a button was pressed, this value will be 1. If a button was released, this value will be 0.
 `button`  | String | The button name which was pressed or released. This value is either 'BI', 'B0', 'AI', or 'A0'.
 
-### F6-02-04
+### <a id="Supported-EEPs-F6-02-04">F6-02-04</a>
 
 * RORG : RPS Telegram (F6)
 * FUNC : Rocker Switch, 2 Rocker (02)
@@ -695,7 +718,7 @@ Property  | Type   | Description
 `button`  | String | The button name which was pressed or released. This value is either 'BI', 'B0', 'AI', or 'A0'.
 
 
-### D2-32-02
+### <a id="Supported-EEPs-D2-32-02">D2-32-02</a>
 
 * RORG : VLD Telegram (D2)
 * FUNC : A.C. Current Clamp (32)
@@ -707,7 +730,6 @@ Property  | Type    | Description
 `ch1`     | Number  | Current value of the channel 1. The unit is "A" (ampere).
 `ch2`     | Number  | Current value of the channel 2. The unit is "A" (ampere).
 `ch3`     | Number  | Current value of the channel 3. The unit is "A" (ampere).
-
 
 
 ---------------------------------------
@@ -967,6 +989,9 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.5.0 (2020-02-07)
+  * The [`startMonitor()`](#startMonitor-method) method now accepts a symbolic link as the parameter `path`.
+  * Newly added "A5-06-05" (Light Sensor - Range 0lx to 10200lx) to the supported EEPs.
 * v0.4.2 (2020-01-21)
   * Supported the latest version of the [serialport](https://www.npmjs.com/package/serialport) (Current version is 8.0.6).
 * v0.4.1 (2020-01-08)
