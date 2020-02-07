@@ -989,6 +989,8 @@ ESK 300 - PTM 21x Push button transmitter module: AI released
 ---------------------------------------
 ## <a id="Release-Note">Release Note</a>
 
+* v0.5.1 (2020-02-07)
+  * Modified the `packege.json`.
 * v0.5.0 (2020-02-07)
   * The [`startMonitor()`](#startMonitor-method) method now accepts a symbolic link as the parameter `path`.
   * Newly added "A5-06-05" (Light Sensor - Range 0lx to 10200lx) to the supported EEPs.
